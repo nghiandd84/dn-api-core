@@ -4,6 +4,6 @@ export enum Constants {
 
     REDIS_HOST = 'localhost',
     REDIS_PORT =  6379,
-    REDIS_TTL = 600
+    REDIS_TTL = 600,
 
 }

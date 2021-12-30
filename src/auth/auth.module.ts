@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Constants } from './constant';
-import { JwtStrategy } from './jwt.strategy';
+import { AtStrategy, RtStrategy } from './strategies';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
@@ -12,7 +12,7 @@ import * as redisStore from 'cache-manager-redis-store';
       store: redisStore,
       host: process.env.REDIS_HOST || Constants.REDIS_HOST,
       port: process.env.REDIS_PORT || Constants.REDIS_PORT,
-      ttl: process.env.REDIS_TTL || Constants.REDIS_TTL
+      ttl: process.env.REDIS_TTL || Constants.REDIS_TTL,
     }),
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -26,7 +26,7 @@ import * as redisStore from 'cache-manager-redis-store';
       },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, AtStrategy, RtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

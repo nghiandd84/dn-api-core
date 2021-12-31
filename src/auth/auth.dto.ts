@@ -8,8 +8,6 @@ export class Login {
 }
 
 export class RegisterUser {
-  @ApiProperty({ required: false, readOnly: true })
-  id: number;
   @ApiProperty({ default: 'John' })
   firstName: string;
   @ApiProperty({ default: 'Smith' })
@@ -21,17 +19,19 @@ export class RegisterUser {
 }
 
 export class User {
-  @ApiProperty({ required: false, readOnly: true })
-  id: number;
-  @ApiProperty({ default: 'John' })
+  id?: number;
   firstName: string;
-  @ApiProperty({ default: 'Smith' })
   lastName: string;
-  @ApiProperty({ default: 'john.smith@yopmail.com' })
   email: string;
-  @ApiProperty({ default: 'Test123!@#' })
   password?: string;
   rd?: number;
+  accesses?: UserAccess[] = [];
+}
+
+export interface UserAccess {
+  roleId: number;
+  locationId?: string | number | null;
+  appId?: string;
 }
 
 export class LoginStatus {

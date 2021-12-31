@@ -13,10 +13,9 @@ import { Login, LoginStatus, RegisterUser } from './auth.dto';
 import { Constants } from './constant';
 
 interface UserService {
-  findByLogin: (login: Login) => Promise<User>;
+  findByLogin: (email: string, password: string) => Promise<any>;
   create: (register: RegisterUser) => Promise<{ id: number }>;
 }
-
 
 @Injectable()
 export class AuthService {
@@ -34,8 +33,14 @@ export class AuthService {
     return user;
   }
 
-  async login(loginUserDto: Login, service: UserService): Promise<LoginStatus> {
-    const user = await service.findByLogin(loginUserDto);
+  async login(
+    loginUserDto: Login,
+    service: UserService,
+  ): Promise<LoginStatus> {
+    const user: User = await service.findByLogin(
+      loginUserDto.email,
+      loginUserDto.password,
+    );
     const rd = Math.ceil(Math.random() * 10000000);
     user.rd = rd;
     user.password = undefined;

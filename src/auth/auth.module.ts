@@ -1,3 +1,4 @@
+import { Reflector } from '@nestjs/core';
 import { Module, CacheModule } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -5,6 +6,7 @@ import { AuthService } from './auth.service';
 import { Constants } from './constant';
 import { AtStrategy, RtStrategy } from './strategies';
 import * as redisStore from 'cache-manager-redis-store';
+import { AccessGuard } from '../auth/guards';
 
 @Module({
   imports: [
@@ -26,7 +28,17 @@ import * as redisStore from 'cache-manager-redis-store';
       },
     }),
   ],
-  providers: [AuthService, AtStrategy, RtStrategy],
-  exports: [AuthService],
+  providers: [
+    AuthService, 
+    AtStrategy, 
+    RtStrategy, 
+    // AccessGuard,
+    Reflector
+  
+  ],
+  exports: [
+    AuthService, 
+    // Reflector
+  ],
 })
 export class AuthModule {}

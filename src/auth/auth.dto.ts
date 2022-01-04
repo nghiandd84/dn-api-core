@@ -29,9 +29,10 @@ export class User {
 }
 
 export interface UserAccess {
-  roleId: number;
+  id: number;
   locationId?: string | number | null;
   appId?: string;
+  roleKey?: string;
 }
 
 export class LoginStatus {

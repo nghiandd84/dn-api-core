@@ -6,7 +6,6 @@ import { AuthService } from './auth.service';
 import { Constants } from './constant';
 import { AtStrategy, RtStrategy } from './strategies';
 import * as redisStore from 'cache-manager-redis-store';
-import { AccessGuard } from '../auth/guards';
 
 @Module({
   imports: [
@@ -32,13 +31,11 @@ import { AccessGuard } from '../auth/guards';
     AuthService, 
     AtStrategy, 
     RtStrategy, 
-    // AccessGuard,
     Reflector
   
   ],
   exports: [
-    AuthService, 
-    // Reflector
+    AuthService
   ],
 })
 export class AuthModule {}

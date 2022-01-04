@@ -44,6 +44,18 @@ export class AuthService {
     const rd = Math.ceil(Math.random() * 10000000);
     user.rd = rd;
     user.password = undefined;
+    if (Array.isArray(user.accesses)) {
+      for (let index = 0; index < user.accesses.length; index++) {
+        user.accesses[index] = {
+          id: user.accesses[index].id,
+          appId: user.accesses[index].appId,
+          locationId: user.accesses[index].locationId,
+          roleKey: user.accesses[index].roleKey,
+        }
+        
+      }
+    }
+    console.log(user);
     this.cacheManager.set(this.getAuthCachKey(user.id), user);
     const token = this.createToken(user);
     return {

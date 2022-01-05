@@ -38,7 +38,8 @@ import { AuthCacheService } from './auth-cache.service';
   ],
   exports: [
     AuthService,
-    AuthCacheService
+    AuthCacheService,
+    // CacheStore
   ],
 })
 export class AuthModule {}

@@ -6,6 +6,7 @@ import {
   Injectable,
   CacheStore,
 } from '@nestjs/common';
+import { authHelper } from '../auth/auth.helper';
 import { JwtPayload, sign } from 'jsonwebtoken';
 
 import { User } from './auth.dto';
@@ -19,7 +20,9 @@ interface UserService {
 
 @Injectable()
 export class AuthService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: CacheStore) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: CacheStore) {
+    authHelper.cache = cacheManager;
+  }
   async validateUser(payload: JwtPayload): Promise<User> {
     const userId = parseInt(payload.id);
     const user = await this.cacheManager.get<User>(this.getAuthCachKey(userId));

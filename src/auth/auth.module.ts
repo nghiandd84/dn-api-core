@@ -12,9 +12,8 @@ import { AuthCacheService } from './auth-cache.service';
   imports: [
     CacheModule.register<any>({
       store: redisStore,
-      host: process.env.REDIS_HOST || Constants.REDIS_HOST,
-      port: process.env.REDIS_PORT || Constants.REDIS_PORT,
-      ttl: process.env.REDIS_TTL || Constants.REDIS_TTL,
+      url: process.env.AUTH_REDIS_URL || Constants.REDIS_URL,
+      ttl: process.env.AUTH_REDIS_TTL || Constants.REDIS_TTL,
     }),
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -34,12 +33,11 @@ import { AuthCacheService } from './auth-cache.service';
     AtStrategy, 
     RtStrategy, 
     Reflector
-  
+
   ],
   exports: [
     AuthService,
-    AuthCacheService,
-    // CacheStore
+    AuthCacheService
   ],
 })
 export class AuthModule {}

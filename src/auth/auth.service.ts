@@ -58,7 +58,6 @@ export class AuthService {
         
       }
     }
-    console.log(user);
     this.cacheManager.set(this.getAuthCachKey(user.id), user);
     const token = this.createToken(user);
     return {

@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { User } from '../auth.dto';
 import { AuthCacheService } from '../auth-cache.service';
+import { Util } from '../guards/util';
 export const AccessPermission = (
   permisionKey: string,
   locationId: string = null,
@@ -20,7 +21,9 @@ export const AccessPermission = (
       const request = context.switchToHttp().getRequest<{ user: User }>();
       const user = request.user;
       this.logger.debug(permisionKey, locationId);
-
+      if (Util.haveSuperAdmin(user)) {
+        return true;
+      }
       let accesses = user.accesses || [];
       if (locationId) {
         accesses = accesses.filter(

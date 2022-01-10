@@ -5,6 +5,7 @@ import {
   Type,
   mixin,
 } from '@nestjs/common';
+import { Util } from '../guards/util';
 import { User } from '../auth.dto';
 export const AccessRole = (
   roleKey: string,
@@ -15,6 +16,9 @@ export const AccessRole = (
     canActivate(context: ExecutionContext) {
       const request = context.switchToHttp().getRequest<{ user: User }>();
       const user = request.user;
+      if (Util.haveSuperAdmin(user)) {
+        return true;
+      }
       const matchRole = user.accesses.find(
         (access) =>
           access.roleKey === roleKey && (app === null || app === access.appId),

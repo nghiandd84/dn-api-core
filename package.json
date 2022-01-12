@@ -20,6 +20,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqp-connection-manager": "^3.0.0",
+    "amqplib": "^0.8.0",
+    "uuid": "^3.3.2",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@types/jest": "27.0.2",
+    "@types/passport": "^1.0.7",
+    "@types/passport-jwt": "^3.0.6",
+    "@types/cache-manager": "^3.4.2",
+    "amqp-connection-manager": "^3.0.0",
+    "amqplib": "^0.8.0",
+    "uuid": "^3.3.2",
     "cache-manager-redis-store": "2.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/common": "^8.0.0",
@@ -32,16 +45,14 @@
     "cache-manager": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.5.2",
-    "passport-jwt": "^4.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "27.0.2",
-    "@types/passport": "^1.0.7",
-    "@types/passport-jwt": "^3.0.6",
-    "@types/cache-manager": "^3.4.2",
+    "passport-jwt": "^4.0.0",
     "typescript": "^4.3.5"
   },
   "peerDependencies": {
+    "amqp-connection-manager": "^3.0.0",
+    "amqplib": "^0.8.0",
+    "uuid": "^3.3.2",
+    "cache-manager-redis-store": "2.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/cli": "^8.0.0",

@@ -146,7 +146,6 @@ export function createConfigurableDynamicRootModule<T, U>(
           ...(moduleProperties.providers || []),
         ],
       };
-      console.log(dynamicModule);
       DynamicRootModule.moduleSubject.next(dynamicModule);
 
       return dynamicModule;

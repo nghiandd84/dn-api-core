@@ -23,6 +23,7 @@ declare const placeholder: IConfigurableDynamicRootModule<
 
 @Module({
   imports: [DiscoveryModule],
+  providers: [ExternalContextCreator],
 })
 export class RabbitMQModule
   extends createConfigurableDynamicRootModule<RabbitMQModule, RabbitMQConfig>(
@@ -32,7 +33,7 @@ export class RabbitMQModule
         {
           provide: AmqpConnection,
           useFactory: async (
-            config: RabbitMQConfig
+            config: RabbitMQConfig,
           ): Promise<AmqpConnection> => {
             return RabbitMQModule.AmqpConnectionFactory(config);
           },
@@ -40,15 +41,16 @@ export class RabbitMQModule
         },
       ],
       exports: [AmqpConnection],
-    }
+    },
   )
-  implements OnModuleDestroy, OnModuleInit {
+  implements OnModuleDestroy, OnModuleInit
+{
   private readonly logger = new Logger(RabbitMQModule.name);
 
   constructor(
     private readonly discover: DiscoveryService,
+    private readonly externalContextCreator: ExternalContextCreator,
     private readonly amqpConnection: AmqpConnection,
-    private readonly externalContextCreator: ExternalContextCreator
   ) {
     super();
   }
@@ -64,7 +66,7 @@ export class RabbitMQModule
   public static build(config: RabbitMQConfig): DynamicModule {
     const logger = new Logger(RabbitMQModule.name);
     logger.warn(
-      'build() is deprecated. use forRoot() or forRootAsync() to configure RabbitMQ'
+      'build() is deprecated. use forRoot() or forRootAsync() to configure RabbitMQ',
     );
     return {
       module: RabbitMQModule,
@@ -101,7 +103,7 @@ export class RabbitMQModule
   public async onModuleInit() {
     if (!this.amqpConnection.configuration.registerHandlers) {
       this.logger.log(
-        'Skipping RabbitMQ Handlers due to configuration. This application instance will not receive messages over RabbitMQ'
+        'Skipping RabbitMQ Handlers due to configuration. This application instance will not receive messages over RabbitMQ',
       );
 
       return;
@@ -109,13 +111,14 @@ export class RabbitMQModule
 
     this.logger.log('Initializing RabbitMQ Handlers');
 
-    const rabbitMeta = await this.discover.providerMethodsWithMetaAtKey<
-      RabbitHandlerConfig
-    >(RABBIT_HANDLER);
+    const rabbitMeta =
+      await this.discover.providerMethodsWithMetaAtKey<RabbitHandlerConfig>(
+        RABBIT_HANDLER,
+      );
 
     const grouped = groupBy(
       rabbitMeta,
-      (x) => x.discoveredMethod.parentClass.name
+      (x) => x.discoveredMethod.parentClass.name,
     );
 
     const providerKeys = Object.keys(grouped);
@@ -127,7 +130,7 @@ export class RabbitMQModule
           const handler = this.externalContextCreator.create(
             discoveredMethod.parentClass.instance,
             discoveredMethod.handler,
-            discoveredMethod.methodName
+            discoveredMethod.methodName,
           );
 
           const { exchange, routingKey, queue } = config;
@@ -143,7 +146,7 @@ export class RabbitMQModule
             !this.amqpConnection.configuration.enableDirectReplyTo
           ) {
             this.logger.warn(
-              `Direct Reply-To Functionality is disabled. RPC handler ${handlerDisplayName} will not be registered`
+              `Direct Reply-To Functionality is disabled. RPC handler ${handlerDisplayName} will not be registered`,
             );
             return;
           }
@@ -153,7 +156,7 @@ export class RabbitMQModule
           return config.type === 'rpc'
             ? this.amqpConnection.createRpc(handler, config)
             : this.amqpConnection.createSubscriber(handler, config);
-        })
+        }),
       );
     }
   }

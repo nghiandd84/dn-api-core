@@ -5,3 +5,7 @@ export enum DB_CONFIG {
     DB_PASSWORD = '123456',
     
 }
+
+export enum RABBITMQ_CONFIG {
+    RABBITMQ_URL = 'amqp://admin:admin@localhost:5672'
+}

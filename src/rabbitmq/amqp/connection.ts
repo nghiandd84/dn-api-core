@@ -90,6 +90,7 @@ export class AmqpConnection {
       ...this.config.connectionInitOptions,
     };
 
+
     const { wait, timeout: timeoutInterval, reject } = options;
 
     const p = this.initCore();
@@ -156,7 +157,7 @@ export class AmqpConnection {
 
     this.config.exchanges.forEach(async (x) =>
       channel.assertExchange(
-        x.name,
+        x.name + '.' + x.type,
         x.type || this.config.defaultExchangeType,
         x.options
       )

@@ -7,7 +7,7 @@ import {
 
 export interface RabbitMQExchangeConfig {
   name: string;
-  type?: string;
+  type?: 'direct' | 'fanout' | 'topic' | 'headers';
   options?: amqplib.Options.AssertExchange;
 }
 

@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build:watch": "tsc --watch",
-    "prepare": "npm run build"
+    "build:watch": "tsc --watch"
   },
   "keywords": [],
   "repository": {

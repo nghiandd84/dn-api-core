@@ -64,6 +64,12 @@ export interface RabbitMQConfig {
     connectionManagerOptions?: amqpConnectionManager.AmqpConnectionManagerOptions;
     registerHandlers?: boolean;
     enableDirectReplyTo?: boolean;
+    channels?: {
+        [channelKey: string]: {
+            prefetchCount: number;
+            default?: boolean;
+        };
+    };
 }
 export declare type RabbitHandlerType = 'rpc' | 'subscribe';
 export interface RabbitHandlerConfig extends MessageHandlerOptions {

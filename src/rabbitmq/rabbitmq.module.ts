@@ -60,6 +60,7 @@ export class RabbitMQModule
     await connection.init();
     const logger = new Logger(RabbitMQModule.name);
     logger.log('Successfully connected to RabbitMQ');
+    // TODO: try to update channels
     return connection;
   }
 

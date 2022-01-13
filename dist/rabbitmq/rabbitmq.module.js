@@ -42,6 +42,7 @@ let RabbitMQModule = RabbitMQModule_1 = class RabbitMQModule extends (0, modules
         await connection.init();
         const logger = new common_1.Logger(RabbitMQModule_1.name);
         logger.log('Successfully connected to RabbitMQ');
+        // TODO: try to update channels
         return connection;
     }
     static build(config) {

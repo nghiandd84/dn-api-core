@@ -10,7 +10,7 @@ import {
   take,
   timeoutWith,
 } from 'rxjs/operators';
-import * as uuid from 'uuid';
+import { nanoid } from 'nanoid';
 import {
   ConnectionInitOptions,
   MessageHandlerOptions,
@@ -45,6 +45,7 @@ const defaultConfig = {
   connectionManagerOptions: {},
   registerHandlers: true,
   enableDirectReplyTo: true,
+  channels: {}
 };
 
 export class AmqpConnection {
@@ -154,7 +155,7 @@ export class AmqpConnection {
     channel: amqplib.ConfirmChannel
   ): Promise<void> {
     this._channel = channel;
-
+    
     this.config.exchanges.forEach(async (x) =>
       channel.assertExchange(
         x.name + '.' + x.type,
@@ -203,7 +204,7 @@ export class AmqpConnection {
   public async request<T extends {}>(
     requestOptions: RequestOptions
   ): Promise<T> {
-    const correlationId = requestOptions.correlationId || uuid.v4();
+    const correlationId = requestOptions.correlationId || nanoid();
     const timeout = requestOptions.timeout || this.config.defaultRpcTimeout;
     const payload = requestOptions.payload || {};
 

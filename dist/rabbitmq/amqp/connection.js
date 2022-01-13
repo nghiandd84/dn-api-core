@@ -24,7 +24,7 @@ const common_1 = require("@nestjs/common");
 const amqpcon = __importStar(require("amqp-connection-manager"));
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
-const uuid = __importStar(require("uuid"));
+const nanoid_1 = require("nanoid");
 const errorBehaviors_1 = require("./errorBehaviors");
 const handlerResponses_1 = require("./handlerResponses");
 const DIRECT_REPLY_QUEUE = 'amq.rabbitmq.reply-to';
@@ -43,6 +43,7 @@ const defaultConfig = {
     connectionManagerOptions: {},
     registerHandlers: true,
     enableDirectReplyTo: true,
+    channels: {}
 };
 class AmqpConnection {
     constructor(config) {
@@ -127,7 +128,7 @@ class AmqpConnection {
         });
     }
     async request(requestOptions) {
-        const correlationId = requestOptions.correlationId || uuid.v4();
+        const correlationId = requestOptions.correlationId || (0, nanoid_1.nanoid)();
         const timeout = requestOptions.timeout || this.config.defaultRpcTimeout;
         const payload = requestOptions.payload || {};
         const response$ = this.messageSubject.pipe((0, operators_1.filter)((x) => x.correlationId === correlationId), (0, operators_1.map)((x) => x.message), (0, operators_1.first)());

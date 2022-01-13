@@ -209,6 +209,7 @@ class AmqpConnection {
         });
     }
     async publish(exchange, routingKey, message, options) {
+        this.logger.log(`Publish message exchange: ${exchange} with routingKey: ${routingKey}`);
         // source amqplib channel is used directly to keep the behavior of throwing connection related errors
         if (!this.managedConnection.isConnected() || !this._channel) {
             throw new Error('AMQP connection is not available');

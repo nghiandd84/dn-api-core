@@ -9,6 +9,7 @@ import {
   Module,
   OnModuleInit,
   OnModuleDestroy,
+  Global,
 } from '@nestjs/common';
 import { ExternalContextCreator } from '@nestjs/core/helpers/external-context-creator';
 import { groupBy } from 'lodash';
@@ -21,9 +22,11 @@ declare const placeholder: IConfigurableDynamicRootModule<
   RabbitMQConfig
 >;
 
+@Global()
 @Module({
   imports: [DiscoveryModule],
   providers: [ExternalContextCreator],
+  exports: [AmqpConnection]
 })
 export class RabbitMQModule
   extends createConfigurableDynamicRootModule<RabbitMQModule, RabbitMQConfig>(

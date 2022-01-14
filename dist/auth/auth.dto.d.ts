@@ -28,3 +28,4 @@ export declare class LoginStatus {
     token: string;
     expiresIn: number | string;
 }
+//# sourceMappingURL=auth.dto.d.ts.map

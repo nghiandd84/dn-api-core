@@ -1,0 +1,1 @@
+{"version":3,"file":"rabbitmq.decorators.d.ts","sourceRoot":"","sources":["../../src/rabbitmq/rabbitmq.decorators.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,mBAAmB,EAAE,MAAM,uBAAuB,CAAC;AAE5D,eAAO,MAAM,mBAAmB,scAM/B,CAAA;AAED,eAAO,MAAM,aAAa,WAAY,mBAAmB,wFAIQ,CAAC;AAElE,eAAO,MAAM,eAAe,qOAA6C,CAAC;AAE1E,eAAO,MAAM,SAAS,qOAAuC,CAAC;AAE9D,eAAO,MAAM,oBAAoB,0BAEhC,CAAC"}

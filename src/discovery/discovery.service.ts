@@ -184,7 +184,6 @@ export class DiscoveryService {
     providerFilter: Filter<DiscoveredClass> = () => true
   ): Promise<DiscoveredMethodWithMeta<T>[]> {
     const providers = await this.providers(providerFilter);
-
     return flatMap(providers, provider =>
       this.classMethodsWithMetaAtKey<T>(provider, metaKey)
     );
@@ -260,7 +259,9 @@ export class DiscoveryService {
         const components = [...nestModule[component].values()];
         return components
           .filter(component => component.scope !== Scope.REQUEST)
-          .map(component => this.toDiscoveredClass(nestModule, component));
+          .map(component => {
+            return this.toDiscoveredClass(nestModule, component)
+          });
       })
     );
   }

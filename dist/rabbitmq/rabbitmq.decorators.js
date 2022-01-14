@@ -4,7 +4,9 @@ exports.InjectRabbitMQConfig = exports.RabbitRPC = exports.RabbitSubscribe = exp
 const common_1 = require("../common");
 const common_2 = require("@nestjs/common");
 const rabbitmq_constants_1 = require("./rabbitmq.constants");
-const makeRabbitDecorator = (input) => (config) => (target, key, descriptor) => (0, common_2.SetMetadata)(rabbitmq_constants_1.RABBIT_HANDLER, Object.assign(Object.assign({}, input), config))(target, key, descriptor);
+const makeRabbitDecorator = (input) => (config) => (target, key, descriptor) => {
+    return (0, common_2.SetMetadata)(rabbitmq_constants_1.RABBIT_HANDLER, Object.assign(Object.assign({}, input), config))(target, key, descriptor);
+};
 exports.makeRabbitDecorator = makeRabbitDecorator;
 const RabbitHandler = (config) => (target, key, descriptor) => (0, common_2.SetMetadata)(rabbitmq_constants_1.RABBIT_HANDLER, config)(target, key, descriptor);
 exports.RabbitHandler = RabbitHandler;

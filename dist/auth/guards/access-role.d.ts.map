@@ -1,0 +1,1 @@
+{"version":3,"file":"access-role.d.ts","sourceRoot":"","sources":["../../../src/auth/guards/access-role.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,WAAW,EAGX,IAAI,EAEL,MAAM,gBAAgB,CAAC;AAGxB,eAAO,MAAM,UAAU,YACZ,MAAM,QACV,MAAM,KACV,KAAK,WAAW,CAmBlB,CAAC"}

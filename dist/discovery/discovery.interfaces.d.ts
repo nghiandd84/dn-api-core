@@ -23,3 +23,4 @@ export interface DiscoveredClassWithMeta<T> {
 }
 export declare type MetaKey = string | number | symbol;
 export declare type Filter<T> = (item: T) => boolean;
+//# sourceMappingURL=discovery.interfaces.d.ts.map

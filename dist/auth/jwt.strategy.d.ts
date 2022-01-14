@@ -9,3 +9,4 @@ export declare class JwtStrategy extends JwtStrategy_base {
     validate(payload: JwtPayload): Promise<User>;
 }
 export {};
+//# sourceMappingURL=jwt.strategy.d.ts.map

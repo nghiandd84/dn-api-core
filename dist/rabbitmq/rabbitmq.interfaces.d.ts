@@ -75,3 +75,4 @@ export declare type RabbitHandlerType = 'rpc' | 'subscribe';
 export interface RabbitHandlerConfig extends MessageHandlerOptions {
     type: RabbitHandlerType;
 }
+//# sourceMappingURL=rabbitmq.interfaces.d.ts.map

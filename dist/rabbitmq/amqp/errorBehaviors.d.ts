@@ -18,3 +18,4 @@ export declare const requeueErrorHandler: MessageErrorHandler;
  */
 export declare const defaultNackErrorHandler: MessageErrorHandler;
 export declare const getHandlerForLegacyBehavior: (behavior: MessageHandlerErrorBehavior) => MessageErrorHandler;
+//# sourceMappingURL=errorBehaviors.d.ts.map

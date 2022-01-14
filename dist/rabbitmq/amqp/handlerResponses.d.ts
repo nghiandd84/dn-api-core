@@ -5,3 +5,4 @@ export declare class Nack {
 }
 export declare type RpcResponse<T> = T | Nack;
 export declare type SubscribeResponse = Nack | undefined;
+//# sourceMappingURL=handlerResponses.d.ts.map

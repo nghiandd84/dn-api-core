@@ -7,3 +7,4 @@ export declare enum DB_CONFIG {
 export declare enum RABBITMQ_CONFIG {
     RABBITMQ_URL = "amqp://admin:admin@localhost:5672"
 }
+//# sourceMappingURL=constant.d.ts.map

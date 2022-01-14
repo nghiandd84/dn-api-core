@@ -18,6 +18,7 @@ const external_context_creator_1 = require("@nestjs/core/helpers/external-contex
 const lodash_1 = require("lodash");
 const connection_1 = require("./amqp/connection");
 const rabbitmq_constants_1 = require("./rabbitmq.constants");
+// @Global()
 let RabbitMQModule = RabbitMQModule_1 = class RabbitMQModule extends (0, modules_1.createConfigurableDynamicRootModule)(rabbitmq_constants_1.RABBIT_CONFIG_TOKEN, {
     providers: [
         {
@@ -106,11 +107,8 @@ let RabbitMQModule = RabbitMQModule_1 = class RabbitMQModule extends (0, modules
     }
 };
 RabbitMQModule = RabbitMQModule_1 = __decorate([
-    (0, common_1.Global)(),
     (0, common_1.Module)({
-        imports: [discovery_1.DiscoveryModule],
-        providers: [external_context_creator_1.ExternalContextCreator],
-        exports: [connection_1.AmqpConnection]
+        imports: [discovery_1.DiscoveryModule]
     }),
     __metadata("design:paramtypes", [discovery_1.DiscoveryService,
         external_context_creator_1.ExternalContextCreator,

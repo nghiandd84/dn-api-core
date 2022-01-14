@@ -6,3 +6,4 @@ export declare enum RABBIT_EXCHANGE_TYPE {
     TOPIC = "topic",
     HEADER = "headers"
 }
+//# sourceMappingURL=rabbitmq.constants.d.ts.map

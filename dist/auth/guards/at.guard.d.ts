@@ -9,3 +9,4 @@ export declare class AtGuard extends AtGuard_base {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean>;
 }
 export {};
+//# sourceMappingURL=at.guard.d.ts.map

@@ -6,3 +6,4 @@ export declare class RtStrategy extends RtStrategy_base {
     validate(req: Request, payload: any): any;
 }
 export {};
+//# sourceMappingURL=rt.strategy.d.ts.map

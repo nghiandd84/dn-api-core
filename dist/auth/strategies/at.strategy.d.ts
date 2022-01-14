@@ -10,3 +10,4 @@ export declare class AtStrategy extends AtStrategy_base {
     validate(payload: JwtPayload): Promise<User>;
 }
 export {};
+//# sourceMappingURL=at.strategy.d.ts.map

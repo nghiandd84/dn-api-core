@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscoveryModule = void 0;
 const common_1 = require("@nestjs/common");
 const metadata_scanner_1 = require("@nestjs/core/metadata-scanner");
-const modules_container_1 = require("@nestjs/core/injector/modules-container");
-// import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 const discovery_service_1 = require("./discovery.service");
 /**
  * Exposes a query API over top of the NestJS Module container
@@ -23,7 +21,7 @@ let DiscoveryModule = class DiscoveryModule {
 DiscoveryModule = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({
-        providers: [discovery_service_1.DiscoveryService, metadata_scanner_1.MetadataScanner, modules_container_1.ModulesContainer],
+        providers: [discovery_service_1.DiscoveryService, metadata_scanner_1.MetadataScanner],
         exports: [discovery_service_1.DiscoveryService],
     })
 ], DiscoveryModule);

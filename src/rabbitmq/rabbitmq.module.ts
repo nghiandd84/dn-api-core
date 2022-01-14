@@ -9,7 +9,6 @@ import {
   Module,
   OnModuleInit,
   OnModuleDestroy,
-  Global,
 } from '@nestjs/common';
 import { ExternalContextCreator } from '@nestjs/core/helpers/external-context-creator';
 import { groupBy } from 'lodash';
@@ -22,11 +21,9 @@ declare const placeholder: IConfigurableDynamicRootModule<
   RabbitMQConfig
 >;
 
-@Global()
+// @Global()
 @Module({
-  imports: [DiscoveryModule],
-  providers: [ExternalContextCreator],
-  exports: [AmqpConnection]
+  imports: [DiscoveryModule]
 })
 export class RabbitMQModule
   extends createConfigurableDynamicRootModule<RabbitMQModule, RabbitMQConfig>(
@@ -124,9 +121,7 @@ export class RabbitMQModule
       rabbitMeta,
       (x) => x.discoveredMethod.parentClass.name,
     );
-
     const providerKeys = Object.keys(grouped);
-
     for (const key of providerKeys) {
       this.logger.log(`Registering rabbitmq handlers from ${key}`);
       await Promise.all(

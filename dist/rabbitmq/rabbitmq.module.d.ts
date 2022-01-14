@@ -18,3 +18,4 @@ export declare class RabbitMQModule extends RabbitMQModule_base implements OnMod
     onModuleInit(): Promise<void>;
 }
 export {};
+//# sourceMappingURL=rabbitmq.module.d.ts.map

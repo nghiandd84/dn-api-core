@@ -176,7 +176,9 @@ let DiscoveryService = class DiscoveryService {
             const components = [...nestModule[component].values()];
             return components
                 .filter(component => component.scope !== common_1.Scope.REQUEST)
-                .map(component => this.toDiscoveredClass(nestModule, component));
+                .map(component => {
+                return this.toDiscoveredClass(nestModule, component);
+            });
         }));
     }
 };

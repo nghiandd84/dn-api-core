@@ -24,3 +24,4 @@ export interface IConfigurableDynamicRootModule<T, U> {
 }
 export declare function createConfigurableDynamicRootModule<T, U>(moduleConfigToken: InjectionToken, moduleProperties?: Partial<Pick<ModuleMetadata, 'imports' | 'exports' | 'providers' | 'controllers'>>): IConfigurableDynamicRootModule<T, U>;
 export {};
+//# sourceMappingURL=dynamicModules.d.ts.map

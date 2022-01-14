@@ -7,8 +7,9 @@ export const makeRabbitDecorator = <T extends Partial<RabbitHandlerConfig>>(
   input: T
 ) => (
   config: Pick<RabbitHandlerConfig, Exclude<keyof RabbitHandlerConfig, keyof T>>
-) => (target, key, descriptor) =>
-  SetMetadata(RABBIT_HANDLER, { ...input, ...config })(target, key, descriptor);
+) => (target, key, descriptor) => {
+  return SetMetadata(RABBIT_HANDLER, { ...input, ...config })(target, key, descriptor) as any;
+}
 
 export const RabbitHandler = (config: RabbitHandlerConfig) => (
   target,

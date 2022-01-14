@@ -7,3 +7,4 @@
  * @param token
  */
 export declare const makeInjectableDecorator: (token: string | symbol) => (() => ParameterDecorator);
+//# sourceMappingURL=injectDecoratorFactory.d.ts.map

@@ -34,3 +34,4 @@ export declare class AmqpConnection {
     private handleMessage;
     private setupQueue;
 }
+//# sourceMappingURL=connection.d.ts.map

@@ -52,7 +52,7 @@ export class AmqpConnection {
   private readonly messageSubject = new Subject<CorrelationMessage>();
   private readonly config: Required<RabbitMQConfig>;
   private readonly logger: Logger;
-  private readonly initialized = new Subject();
+  private readonly initialized = new Subject<void>();
   private _managedConnection!: amqpcon.AmqpConnectionManager;
   private _managedChannel!: amqpcon.ChannelWrapper;
   private _channel?: amqplib.Channel;
@@ -110,7 +110,7 @@ export class AmqpConnection {
         ),
         catchError((err) => (reject ? throwError(err) : EMPTY))
       )
-      .toPromise<any>();
+      .toPromise();
   }
 
   private async initCore(): Promise<void> {

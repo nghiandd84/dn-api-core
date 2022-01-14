@@ -13,3 +13,4 @@ export interface AsyncOptionsFactoryProvider<T> extends Pick<ModuleMetadata, 'im
     inject?: any[];
 }
 export declare function createAsyncOptionsProvider<T>(provide: string | symbol | Type<any>, options: AsyncOptionsFactoryProvider<T>): Provider;
+//# sourceMappingURL=options.d.ts.map

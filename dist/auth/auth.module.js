@@ -19,6 +19,7 @@ const auth_cache_service_1 = require("./auth-cache.service");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
+    (0, common_1.Global)(),
     (0, common_1.Module)({
         imports: [
             common_1.CacheModule.register({

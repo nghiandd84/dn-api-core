@@ -13,6 +13,7 @@ exports.AccessPermission = void 0;
 const common_1 = require("@nestjs/common");
 const auth_cache_service_1 = require("../auth-cache.service");
 const util_1 = require("../guards/util");
+const rabbitmq_helpers_1 = require("../../rabbitmq/rabbitmq.helpers");
 const AccessPermission = (permisionKey, locationId = null) => {
     let AccessPermissionMixin = class AccessPermissionMixin {
         constructor(authCacheService) {
@@ -20,6 +21,10 @@ const AccessPermission = (permisionKey, locationId = null) => {
             this.logger = new common_1.Logger(exports.AccessPermission.name);
         }
         canActivate(context) {
+            const isRabitMT = (0, rabbitmq_helpers_1.isRabbitContext)(context);
+            if (isRabitMT) {
+                return true;
+            }
             const request = context.switchToHttp().getRequest();
             const user = request.user;
             this.logger.debug(permisionKey, locationId);

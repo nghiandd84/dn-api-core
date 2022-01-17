@@ -14,6 +14,7 @@ exports.AtGuard = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const passport_1 = require("@nestjs/passport");
+const rabbitmq_helpers_1 = require("../../rabbitmq/rabbitmq.helpers");
 let AtGuard = AtGuard_1 = class AtGuard extends (0, passport_1.AuthGuard)('jwt') {
     constructor(reflector) {
         super();
@@ -21,10 +22,16 @@ let AtGuard = AtGuard_1 = class AtGuard extends (0, passport_1.AuthGuard)('jwt')
         this.logger = new common_1.Logger(AtGuard_1.name);
     }
     canActivate(context) {
+        const isRabitMT = (0, rabbitmq_helpers_1.isRabbitContext)(context);
+        if (isRabitMT) {
+            return true;
+        }
+        this.logger.debug('can active', this.reflector);
         const isPublic = this.reflector.getAllAndOverride('IS_PUBLIC_API', [
             context.getHandler(),
             context.getClass(),
         ]);
+        this.logger.debug(`isPublic ${isPublic}`);
         if (isPublic)
             return true;
         return super.canActivate(context);

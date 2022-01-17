@@ -1,5 +1,5 @@
 import { Reflector } from '@nestjs/core';
-import { Module, CacheModule } from '@nestjs/common';
+import { Module, CacheModule, Global } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -8,6 +8,7 @@ import { AtStrategy, RtStrategy } from './strategies';
 import * as redisStore from 'cache-manager-redis-store';
 import { AuthCacheService } from './auth-cache.service';
 
+@Global()
 @Module({
   imports: [
     CacheModule.register<any>({

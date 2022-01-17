@@ -9,6 +9,7 @@ import {
 import { User } from '../auth.dto';
 import { AuthCacheService } from '../auth-cache.service';
 import { Util } from '../guards/util';
+import { isRabbitContext } from '../../rabbitmq/rabbitmq.helpers';
 export const AccessPermission = (
   permisionKey: string,
   locationId: string = null,
@@ -18,6 +19,10 @@ export const AccessPermission = (
     private readonly logger = new Logger(AccessPermission.name);
     constructor(private authCacheService: AuthCacheService) {}
     canActivate(context: ExecutionContext) {
+      const  isRabitMT = isRabbitContext(context)
+      if (isRabitMT) {
+        return true;
+      }
       const request = context.switchToHttp().getRequest<{ user: User }>();
       const user = request.user;
       this.logger.debug(permisionKey, locationId);

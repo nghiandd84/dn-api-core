@@ -263,19 +263,22 @@ export class AmqpConnection {
         if (msg == null) {
           throw new Error('Received null message');
         }
-
-        const response = await this.handleMessage(
+        
+        const responseData: any = await this.handleMessage(
           handler,
           msg,
           msgOptions.allowNonJsonMessages
         );
-
+        let response: any = responseData;
+        if (responseData.hasOwnProperty('message')) {
+          response = responseData.message
+        }
         if (response instanceof Nack) {
           channel.nack(msg, false, response.requeue);
           return;
         }
-
-        if (response) {
+        
+        if (response) {  
           throw new Error(
             'Received response from subscribe handler. Subscribe handlers should only return void'
           );
@@ -283,6 +286,7 @@ export class AmqpConnection {
 
         channel.ack(msg);
       } catch (e) {
+        this.logger.error(e);
         if (msg == null) {
           return;
         } else {
@@ -296,6 +300,7 @@ export class AmqpConnection {
           await errorHandler(channel, msg, e);
         }
       }
+      
     });
   }
 
@@ -383,7 +388,6 @@ export class AmqpConnection {
     } else {
       buffer = Buffer.alloc(0);
     }
-
     this._channel.publish(exchange, routingKey, buffer, options);
   }
 

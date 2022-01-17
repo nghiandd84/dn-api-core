@@ -3,12 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessRole = void 0;
 const common_1 = require("@nestjs/common");
 const util_1 = require("../guards/util");
+const rabbitmq_helpers_1 = require("../../rabbitmq/rabbitmq.helpers");
 const AccessRole = (roleKey, app = null) => {
     class AccessRoleMixin {
         constructor() {
             this.logger = new common_1.Logger(exports.AccessRole.name);
         }
         canActivate(context) {
+            const isRabitMT = (0, rabbitmq_helpers_1.isRabbitContext)(context);
+            if (isRabitMT) {
+                return true;
+            }
             const request = context.switchToHttp().getRequest();
             const user = request.user;
             if (util_1.Util.haveSuperAdmin(user)) {

@@ -26,6 +26,7 @@ let AtStrategy = AtStrategy_1 = class AtStrategy extends (0, passport_1.Passport
         this.logger = new common_1.Logger(AtStrategy_1.name);
     }
     async validate(payload) {
+        this.logger.debug(payload);
         const user = await this.authService.validateUser(payload);
         if (!user) {
             this.logger.debug('Invalid Token');

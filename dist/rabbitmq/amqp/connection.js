@@ -132,7 +132,11 @@ class AmqpConnection {
                 if (msg == null) {
                     throw new Error('Received null message');
                 }
-                const response = await this.handleMessage(handler, msg, msgOptions.allowNonJsonMessages);
+                const responseData = await this.handleMessage(handler, msg, msgOptions.allowNonJsonMessages);
+                let response = responseData;
+                if (responseData.hasOwnProperty('message')) {
+                    response = responseData.message;
+                }
                 if (response instanceof handlerResponses_1.Nack) {
                     channel.nack(msg, false, response.requeue);
                     return;
@@ -143,6 +147,7 @@ class AmqpConnection {
                 channel.ack(msg);
             }
             catch (e) {
+                this.logger.error(e);
                 if (msg == null) {
                     return;
                 }

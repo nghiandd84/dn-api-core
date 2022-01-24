@@ -1,0 +1,1 @@
+{"version":3,"file":"common.d.ts","sourceRoot":"","sources":["../../../../src/monitor/metrics/decorators/common.ts"],"names":[],"mappings":"AAAA,OAAO,EAAW,aAAa,EAAE,MAAM,4BAA4B,CAAC;AAGpE;;;;GAIG;AACH,eAAO,MAAM,mBAAmB,aACnB,aAAa,8BACG,GAAG,EAAE,KAAG,EAAE;;KAepC,CAAC;AAEJ;;GAEG;AACH,eAAO,MAAM,iBAAiB,aACjB,aAAa,cAEd,MAAM,eACD,MAAM,GAAG,MAAM,gDACkB,GAAG,EAAE,KAAK,GAAG,UAe5D,CAAC"}

@@ -3,4 +3,5 @@ export * from './modules';
 export * from './auth';
 export * from './util';
 export * from './rabbitmq';
+export * from './monitor';
 //# sourceMappingURL=index.d.ts.map

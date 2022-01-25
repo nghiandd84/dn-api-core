@@ -4,3 +4,4 @@ export * from './auth';
 export * from './util';
 export * from './rabbitmq';
 export * from './monitor';
+export * from './logger';

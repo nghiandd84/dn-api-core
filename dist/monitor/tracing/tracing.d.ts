@@ -1,4 +1,3 @@
 import { NodeSDK } from '@opentelemetry/sdk-node';
-declare const otelSDK: NodeSDK;
-export default otelSDK;
+export declare const otelSDK: NodeSDK;
 //# sourceMappingURL=tracing.d.ts.map

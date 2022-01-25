@@ -11,10 +11,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./opentelemetry.module"), exports);
-__exportStar(require("./tracing/decorators/span"), exports);
-__exportStar(require("./tracing/trace.service"), exports);
+// export * from './tracing/decorators/span';
+// export * from './tracing/trace.service';
 __exportStar(require("./metrics/metric.service"), exports);
 __exportStar(require("./metrics/injector"), exports);
 __exportStar(require("./metrics/decorators"), exports);
 __exportStar(require("./opentelemetry.constants"), exports);
+__exportStar(require("./tracing"), exports);
 //# sourceMappingURL=index.js.map

@@ -4,6 +4,7 @@ exports.logger = exports.loggerOptions = exports.Logger = void 0;
 const pino_1 = require("pino");
 const pino_2 = require("pino");
 const api_1 = require("@opentelemetry/api");
+const tracing_1 = require("../monitor/tracing");
 var nestjs_pino_1 = require("nestjs-pino");
 Object.defineProperty(exports, "Logger", { enumerable: true, get: function () { return nestjs_pino_1.Logger; } });
 exports.loggerOptions = {
@@ -13,12 +14,13 @@ exports.loggerOptions = {
             return { level: label };
         },
         log(object) {
-            var _a;
             const span = api_1.trace.getSpan(api_1.context.active());
             if (!span)
                 return Object.assign({}, object);
-            const { spanId, traceId } = (_a = api_1.trace
-                .getSpan(api_1.context.active())) === null || _a === void 0 ? void 0 : _a.spanContext();
+            // const { spanId, traceId } = trace
+            //   .getSpan(context.active())
+            //   ?.spanContext();
+            const { spanId, traceId } = (0, tracing_1.activeSpanContext)();
             return Object.assign(Object.assign({}, object), { spanId, traceId });
         },
     },

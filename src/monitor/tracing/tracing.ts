@@ -17,7 +17,7 @@ import * as process from 'process';
 const batchSpanProcessor: any = new BatchSpanProcessor(new JaegerExporter());
 const PROMETHEUS_PORT = process.env.PROMETHEUS_PORT ? parseInt(process.env.PROMETHEUS_PORT) : 16001;
 
-console.log(`Prometheus export run on PORT = ${PROMETHEUS_PORT}`);
+console.log(`PrometheusExporter will run on PORT = ${PROMETHEUS_PORT}`);
 export const otelSDK = new NodeSDK({
   metricExporter: new PrometheusExporter({
     port: PROMETHEUS_PORT,
@@ -38,6 +38,7 @@ export const otelSDK = new NodeSDK({
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
+
 
 // You can also use the shutdown method to gracefully shut down the SDK before process shutdown
 // or on some operating system signal.

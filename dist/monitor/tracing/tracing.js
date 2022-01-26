@@ -13,7 +13,7 @@ const context_async_hooks_1 = require("@opentelemetry/context-async-hooks");
 const process = require("process");
 const batchSpanProcessor = new tracing_1.BatchSpanProcessor(new exporter_jaeger_1.JaegerExporter());
 const PROMETHEUS_PORT = process.env.PROMETHEUS_PORT ? parseInt(process.env.PROMETHEUS_PORT) : 16001;
-console.log(`Prometheus export run on PORT = ${PROMETHEUS_PORT}`);
+console.log(`PrometheusExporter will run on PORT = ${PROMETHEUS_PORT}`);
 exports.otelSDK = new sdk_node_1.NodeSDK({
     metricExporter: new exporter_prometheus_1.PrometheusExporter({
         port: PROMETHEUS_PORT,

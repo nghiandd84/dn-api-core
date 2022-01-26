@@ -22,6 +22,7 @@ import {
   MessageHandlerErrorBehavior,
 } from './errorBehaviors';
 import { Nack, RpcResponse, SubscribeResponse } from './handlerResponses';
+import { activeSpanContext } from '../../monitor/tracing';
 
 const DIRECT_REPLY_QUEUE = 'amq.rabbitmq.reply-to';
 
@@ -371,6 +372,14 @@ export class AmqpConnection {
     message: any,
     options?: amqplib.Options.Publish
   ) {
+
+    const { spanId, traceId } = activeSpanContext();
+    const tracingData = {
+      // headers: {
+        spanId,
+        traceId,
+      // },
+    };
     
     this.logger.log(`Publish message exchange: ${exchange} with routingKey: ${routingKey}`);
     // source amqplib channel is used directly to keep the behavior of throwing connection related errors
@@ -388,7 +397,7 @@ export class AmqpConnection {
     } else {
       buffer = Buffer.alloc(0);
     }
-    this._channel.publish(exchange, routingKey, buffer, options);
+    this._channel.publish(exchange, routingKey, buffer, {...options, headers: { ...tracingData, ...options?.headers}});
   }
 
   private handleMessage<T, U>(

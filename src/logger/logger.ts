@@ -1,6 +1,7 @@
 import Pino, { Logger as PinoLogger } from 'pino';
 import { LoggerOptions, destination } from 'pino';
 import { trace, context } from '@opentelemetry/api';
+import { activeSpanContext } from '../monitor/tracing';
 export { Logger } from 'nestjs-pino';
 export const loggerOptions: LoggerOptions = {
   level: 'info',
@@ -12,9 +13,10 @@ export const loggerOptions: LoggerOptions = {
     log(object) {
       const span = trace.getSpan(context.active());
       if (!span) return { ...object };
-      const { spanId, traceId } = trace
-        .getSpan(context.active())
-        ?.spanContext();
+      // const { spanId, traceId } = trace
+      //   .getSpan(context.active())
+      //   ?.spanContext();
+      const { spanId, traceId } = activeSpanContext();
       return { ...object, spanId, traceId };
     },
   },

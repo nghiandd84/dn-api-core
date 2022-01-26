@@ -8,6 +8,7 @@ const operators_1 = require("rxjs/operators");
 const nanoid_1 = require("nanoid");
 const errorBehaviors_1 = require("./errorBehaviors");
 const handlerResponses_1 = require("./handlerResponses");
+const tracing_1 = require("../../monitor/tracing");
 const DIRECT_REPLY_QUEUE = 'amq.rabbitmq.reply-to';
 const defaultConfig = {
     prefetchCount: 10,
@@ -195,6 +196,13 @@ class AmqpConnection {
         });
     }
     async publish(exchange, routingKey, message, options) {
+        const { spanId, traceId } = (0, tracing_1.activeSpanContext)();
+        const tracingData = {
+            // headers: {
+            spanId,
+            traceId,
+            // },
+        };
         this.logger.log(`Publish message exchange: ${exchange} with routingKey: ${routingKey}`);
         // source amqplib channel is used directly to keep the behavior of throwing connection related errors
         if (!this.managedConnection.isConnected() || !this._channel) {
@@ -213,7 +221,7 @@ class AmqpConnection {
         else {
             buffer = Buffer.alloc(0);
         }
-        this._channel.publish(exchange, routingKey, buffer, options);
+        this._channel.publish(exchange, routingKey, buffer, Object.assign(Object.assign({}, options), { headers: Object.assign(Object.assign({}, tracingData), options === null || options === void 0 ? void 0 : options.headers) }));
     }
     handleMessage(handler, msg, allowNonJsonMessages) {
         let message = undefined;

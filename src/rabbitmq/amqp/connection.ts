@@ -8,18 +8,19 @@ import {
   first,
   map,
   take,
-  timeoutWith,
+  timeoutWith
 } from 'rxjs/operators';
 import { nanoid } from 'nanoid';
+import api, { trace, context } from '@opentelemetry/api';
 import {
   ConnectionInitOptions,
   MessageHandlerOptions,
   RabbitMQConfig,
-  RequestOptions,
+  RequestOptions
 } from '../rabbitmq.interfaces';
 import {
   getHandlerForLegacyBehavior,
-  MessageHandlerErrorBehavior,
+  MessageHandlerErrorBehavior
 } from './errorBehaviors';
 import { Nack, RpcResponse, SubscribeResponse } from './handlerResponses';
 import { activeSpanContext } from '../../monitor/tracing';
@@ -41,7 +42,7 @@ const defaultConfig = {
   connectionInitOptions: {
     wait: true,
     timeout: 5000,
-    reject: true,
+    reject: true
   },
   connectionManagerOptions: {},
   registerHandlers: true,
@@ -89,9 +90,8 @@ export class AmqpConnection {
   public async init(): Promise<void> {
     const options: Required<ConnectionInitOptions> = {
       ...defaultConfig.connectionInitOptions,
-      ...this.config.connectionInitOptions,
+      ...this.config.connectionInitOptions
     };
-
 
     const { wait, timeout: timeoutInterval, reject } = options;
 
@@ -132,7 +132,7 @@ export class AmqpConnection {
     });
 
     this._managedChannel = this._managedConnection.createChannel({
-      name: AmqpConnection.name,
+      name: AmqpConnection.name
     });
 
     this._managedChannel.on('connect', () =>
@@ -156,7 +156,7 @@ export class AmqpConnection {
     channel: amqplib.ConfirmChannel
   ): Promise<void> {
     this._channel = channel;
-    
+
     this.config.exchanges.forEach(async (x) =>
       channel.assertExchange(
         x.name + '.' + x.type,
@@ -191,13 +191,13 @@ export class AmqpConnection {
 
         const correlationMessage: CorrelationMessage = {
           correlationId: msg.properties.correlationId.toString(),
-          message: message,
+          message: message
         };
 
         this.messageSubject.next(correlationMessage);
       },
       {
-        noAck: true,
+        noAck: true
       }
     );
   }
@@ -221,7 +221,7 @@ export class AmqpConnection {
       payload,
       {
         replyTo: DIRECT_REPLY_QUEUE,
-        correlationId,
+        correlationId
       }
     );
 
@@ -264,28 +264,42 @@ export class AmqpConnection {
         if (msg == null) {
           throw new Error('Received null message');
         }
-        
-        const responseData: any = await this.handleMessage(
-          handler,
-          msg,
-          msgOptions.allowNonJsonMessages
-        );
-        let response: any = responseData;
-        if (responseData.hasOwnProperty('message')) {
-          response = responseData.message
-        }
-        if (response instanceof Nack) {
-          channel.nack(msg, false, response.requeue);
-          return;
-        }
-        
-        if (response) {  
-          throw new Error(
-            'Received response from subscribe handler. Subscribe handlers should only return void'
-          );
-        }
+        const traceId = msg?.properties?.headers?.traceId || null;
+        const spanId = msg?.properties?.headers?.spanId || null;
+        const tracer = trace.getTracer('default');
+        tracer.startActiveSpan('rabbitmq', async (span) => {
+          span.spanContext().isRemote = true;
+          if (traceId) {
+            span.spanContext().traceId = traceId;
+          }
+          if (spanId) {
+            (span as any).parentSpanId = spanId;
+          }
+          this.logger.log('rabbitqp subscribe')
 
-        channel.ack(msg);
+          const responseData: any = await this.handleMessage(
+            handler,
+            msg,
+            msgOptions.allowNonJsonMessages
+          );
+          let response: any = responseData;
+          if (responseData.hasOwnProperty('message')) {
+            response = responseData.message;
+          }
+          if (response instanceof Nack) {
+            channel.nack(msg, false, response.requeue);
+            span.end();
+            return;
+          }
+
+          if (response) {
+            throw new Error(
+              'Received response from subscribe handler. Subscribe handlers should only return void'
+            );
+          }
+          span.end();
+          channel.ack(msg);
+        });
       } catch (e) {
         this.logger.error(e);
         if (msg == null) {
@@ -301,7 +315,6 @@ export class AmqpConnection {
           await errorHandler(channel, msg, e);
         }
       }
-      
     });
   }
 
@@ -372,16 +385,15 @@ export class AmqpConnection {
     message: any,
     options?: amqplib.Options.Publish
   ) {
-
     const { spanId, traceId } = activeSpanContext();
     const tracingData = {
-      // headers: {
-        spanId,
-        traceId,
-      // },
+      spanId,
+      traceId
     };
-    
-    this.logger.log(`Publish message exchange: ${exchange} with routingKey: ${routingKey}`);
+
+    this.logger.log(
+      `Publish message exchange: ${exchange} with routingKey: ${routingKey}`
+    );
     // source amqplib channel is used directly to keep the behavior of throwing connection related errors
     if (!this.managedConnection.isConnected() || !this._channel) {
       throw new Error('AMQP connection is not available');
@@ -397,7 +409,10 @@ export class AmqpConnection {
     } else {
       buffer = Buffer.alloc(0);
     }
-    this._channel.publish(exchange, routingKey, buffer, {...options, headers: { ...tracingData, ...options?.headers}});
+    this._channel.publish(exchange, routingKey, buffer, {
+      ...options,
+      headers: { ...tracingData, ...options?.headers }
+    });
   }
 
   private handleMessage<T, U>(
@@ -432,7 +447,7 @@ export class AmqpConnection {
     const {
       exchange,
       routingKey,
-      createQueueIfNotExists = true,
+      createQueueIfNotExists = true
     } = subscriptionOptions;
 
     let actualQueue: string;

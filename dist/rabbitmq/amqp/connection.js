@@ -6,6 +6,7 @@ const amqpcon = require("amqp-connection-manager");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const nanoid_1 = require("nanoid");
+const api_1 = require("@opentelemetry/api");
 const errorBehaviors_1 = require("./errorBehaviors");
 const handlerResponses_1 = require("./handlerResponses");
 const tracing_1 = require("../../monitor/tracing");
@@ -20,7 +21,7 @@ const defaultConfig = {
     connectionInitOptions: {
         wait: true,
         timeout: 5000,
-        reject: true,
+        reject: true
     },
     connectionManagerOptions: {},
     registerHandlers: true,
@@ -74,7 +75,7 @@ class AmqpConnection {
             this.logger.error('Disconnected from RabbitMQ broker', err === null || err === void 0 ? void 0 : err.stack);
         });
         this._managedChannel = this._managedConnection.createChannel({
-            name: AmqpConnection.name,
+            name: AmqpConnection.name
         });
         this._managedChannel.on('connect', () => this.logger.log('Successfully connected a RabbitMQ channel'));
         this._managedChannel.on('error', (err, { name }) => this.logger.log(`Failed to setup a RabbitMQ channel - name: ${name} / error: ${err.message} ${err.stack}`));
@@ -102,11 +103,11 @@ class AmqpConnection {
                 : undefined;
             const correlationMessage = {
                 correlationId: msg.properties.correlationId.toString(),
-                message: message,
+                message: message
             };
             this.messageSubject.next(correlationMessage);
         }, {
-            noAck: true,
+            noAck: true
         });
     }
     async request(requestOptions) {
@@ -116,7 +117,7 @@ class AmqpConnection {
         const response$ = this.messageSubject.pipe((0, operators_1.filter)((x) => x.correlationId === correlationId), (0, operators_1.map)((x) => x.message), (0, operators_1.first)());
         await this.publish(requestOptions.exchange, requestOptions.routingKey, payload, {
             replyTo: DIRECT_REPLY_QUEUE,
-            correlationId,
+            correlationId
         });
         const timeout$ = (0, rxjs_1.interval)(timeout).pipe((0, operators_1.first)(), (0, operators_1.map)(() => {
             throw new Error(`Failed to receive response within timeout of ${timeout}ms`);
@@ -129,23 +130,39 @@ class AmqpConnection {
     async setupSubscriberChannel(handler, msgOptions, channel) {
         const queue = await this.setupQueue(msgOptions, channel);
         await channel.consume(queue, async (msg) => {
+            var _a, _b, _c, _d;
             try {
                 if (msg == null) {
                     throw new Error('Received null message');
                 }
-                const responseData = await this.handleMessage(handler, msg, msgOptions.allowNonJsonMessages);
-                let response = responseData;
-                if (responseData.hasOwnProperty('message')) {
-                    response = responseData.message;
-                }
-                if (response instanceof handlerResponses_1.Nack) {
-                    channel.nack(msg, false, response.requeue);
-                    return;
-                }
-                if (response) {
-                    throw new Error('Received response from subscribe handler. Subscribe handlers should only return void');
-                }
-                channel.ack(msg);
+                const traceId = ((_b = (_a = msg === null || msg === void 0 ? void 0 : msg.properties) === null || _a === void 0 ? void 0 : _a.headers) === null || _b === void 0 ? void 0 : _b.traceId) || null;
+                const spanId = ((_d = (_c = msg === null || msg === void 0 ? void 0 : msg.properties) === null || _c === void 0 ? void 0 : _c.headers) === null || _d === void 0 ? void 0 : _d.spanId) || null;
+                const tracer = api_1.trace.getTracer('default');
+                tracer.startActiveSpan('rabbitmq', async (span) => {
+                    span.spanContext().isRemote = true;
+                    if (traceId) {
+                        span.spanContext().traceId = traceId;
+                    }
+                    if (spanId) {
+                        span.parentSpanId = spanId;
+                    }
+                    this.logger.log('rabbitqp subscribe');
+                    const responseData = await this.handleMessage(handler, msg, msgOptions.allowNonJsonMessages);
+                    let response = responseData;
+                    if (responseData.hasOwnProperty('message')) {
+                        response = responseData.message;
+                    }
+                    if (response instanceof handlerResponses_1.Nack) {
+                        channel.nack(msg, false, response.requeue);
+                        span.end();
+                        return;
+                    }
+                    if (response) {
+                        throw new Error('Received response from subscribe handler. Subscribe handlers should only return void');
+                    }
+                    span.end();
+                    channel.ack(msg);
+                });
             }
             catch (e) {
                 this.logger.error(e);
@@ -198,10 +215,8 @@ class AmqpConnection {
     async publish(exchange, routingKey, message, options) {
         const { spanId, traceId } = (0, tracing_1.activeSpanContext)();
         const tracingData = {
-            // headers: {
             spanId,
-            traceId,
-            // },
+            traceId
         };
         this.logger.log(`Publish message exchange: ${exchange} with routingKey: ${routingKey}`);
         // source amqplib channel is used directly to keep the behavior of throwing connection related errors
@@ -242,7 +257,7 @@ class AmqpConnection {
         return handler(message, msg);
     }
     async setupQueue(subscriptionOptions, channel) {
-        const { exchange, routingKey, createQueueIfNotExists = true, } = subscriptionOptions;
+        const { exchange, routingKey, createQueueIfNotExists = true } = subscriptionOptions;
         let actualQueue;
         if (createQueueIfNotExists) {
             const { queue } = await channel.assertQueue(subscriptionOptions.queue || '', subscriptionOptions.queueOptions || undefined);
